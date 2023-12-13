@@ -1,0 +1,122 @@
+#include<iostream>
+using namespace std;
+
+struct SLL_Node {
+    int start, end, flag;
+    SLL_Node* next;
+};
+
+class App_Shedule {
+public:
+    void create_Shed();
+    void display_Shed();
+    void book_App();
+    void cancel_App();
+    void sort_App();
+} A1;
+
+SLL_Node* head = nullptr;
+
+int main() {
+    char ans;
+    do {
+        cout << "\n\n * Menu *";
+        cout << "\n 1. Create Appointment Schedule";
+        cout << "\n 2. Display Free Slots";
+        cout << "\n 3. Book an Appointment";
+        cout << "\n 4. Cancel an Appointment";
+        cout << "\n 5. Sort slots based on Time";
+        cout << "\n\n\t Enter your choice: ";
+        int ch;
+        cin >> ch;
+        switch (ch) {
+            case 1: A1.create_Shed(); break;
+            case 2: A1.display_Shed(); break;
+            case 3: A1.book_App(); break;
+            case 4: A1.cancel_App(); break;
+            case 5: A1.sort_App(); break;
+            default: cout << "\n\t Wrong choice!!!";
+        }
+        cout << "\n\n\t Do you wanna continue? (y/n) : ";
+        cin >> ans;
+    } while (ans == 'y');
+}
+
+void App_Shedule::create_Shed() {
+    int size;
+    cout << "\n\n\t How many Appointment Slots: ";
+    cin >> size;
+    for (int i = 0; i < size; i++) {
+        SLL_Node* temp = new SLL_Node;
+        cout << "\n\n\t Enter Start Time: ";
+        cin >> temp->start;
+        cout << "\n\t Enter End Time: ";
+        cin >> temp->end;
+        temp->flag = 0;
+        temp->next = nullptr;
+        if (head == nullptr) head = temp;
+        else {
+            SLL_Node* last = head;
+            while (last->next != nullptr) last = last->next;
+            last->next = temp;
+        }
+    }
+}
+
+void App_Shedule::display_Shed() {
+    int cnt = 1;
+    SLL_Node* temp = head;
+    cout << "\n\n\t *Appointment Schedule*";
+    cout << "\n\n\t Srno.\tStart\tEnd\tStatus";
+    while (temp != nullptr) {
+        cout << "\n\n\t " << cnt << "\t " << temp->start << "\t " << temp->end;
+        cout << (temp->flag ? "\t-Booked-" : "\t--Free--");
+        temp = temp->next;
+        cnt++;
+    }
+}
+
+void App_Shedule::book_App() {
+    int start;
+    cout << "\n\n\t Please enter Appointment time: ";
+    cin >> start;
+    SLL_Node* temp = head;
+    while (temp != nullptr) {
+        if (start == temp->start) {
+            if (temp->flag == 0) {
+                cout << "\n\n\t Appointment Slot is Booked!!!";
+                temp->flag = 1;
+            } else cout << "\n\n\t Appointment Slot is not Available!!!";
+        }
+        temp = temp->next;
+    }
+}
+
+void App_Shedule::cancel_App() {
+    int start;
+    cout << "\n\n\t Please enter Appointment time to Cancel: ";
+    cin >> start;
+    SLL_Node* temp = head;
+    while (temp != nullptr) {
+        if (start == temp->start) {
+            if (temp->flag == 1) {
+                cout << "\n\n\t Your Appointment Slot is Canceled!!!";
+                temp->flag = 0;
+            } else cout << "\n\n\t Your Appointment was not Booked!!!";
+        }
+        temp = temp->next;
+    }
+}
+
+void App_Shedule::sort_App() {
+    int val;
+    for (SLL_Node* temp = head; temp != nullptr; temp = temp->next) {
+        for (SLL_Node* nextNode = temp->next; nextNode != nullptr; nextNode = nextNode->next) {
+            if (temp->start > nextNode->start) {
+                swap(temp->start, nextNode->start);
+                swap(temp->end, nextNode->end);
+            }
+        }
+    }
+    cout << "\n\n\t The Appointments got Sorted!!!";
+}
